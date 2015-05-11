@@ -16,6 +16,11 @@ function im_instalivit_admin_page(){
 	include('admin-page.php');
 }
 
+function im_instalivit_view($atts = null){
+	include('instalivit-view.php');
+}
+
 add_action('admin_menu', 'im_instalivit_admin_menu');
+add_shortcode('instalivit', 'im_instalivit_view');
 
 ?>
