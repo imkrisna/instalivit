@@ -1,3 +1,23 @@
 <div class="wrap">
-	Hello this is InstaLivit shortcode
+	<div class="isotope">
+		<div class="instalivit-item"></div>
+		<div class="instalivit-item"></div>
+		<div class="instalivit-item"></div>
+		<div class="instalivit-item"></div>
+		<div class="instalivit-item"></div>
+		<div class="instalivit-item"></div>
+		<div class="instalivit-item"></div>
+	</div>
 </div>
+<script>
+jQuery(document).ready(function($) {
+  
+  $('.isotope').isotope({
+    itemSelector: '.instalivit-item',
+    masonry: {
+      gutter: 10
+    }
+  });
+
+});
+</script>
