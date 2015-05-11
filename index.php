@@ -10,6 +10,7 @@ Author URI: http://www.imkrisna.com/
 
 function im_instalivit_add_dependency(){
 	wp_enqueue_script('jquery');
+	wp_enqueue_script('api_instagram', plugins_url('api.instagram.js', __FILE__));
 	wp_enqueue_script('isotope', plugins_url('include/isotope.pkgd.min.js', __FILE__));
 	wp_enqueue_style('instalivit_style', plugins_url('instalivit.css', __FILE__));
 }
