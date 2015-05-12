@@ -8,9 +8,12 @@ Version: 0.1
 Author URI: http://www.imkrisna.com/
 */
 
+$IM_INSTALIVIT_USERS 	= array();
+$IM_INSTALIVIT_TAGS		= array();
+
 function im_instalivit_add_dependency(){
 	wp_enqueue_script('jquery');
-	wp_enqueue_script('api_instagram', plugins_url('api.instagram.js', __FILE__));
+	wp_enqueue_script('instalivit_js', plugins_url('instalivit.js', __FILE__));
 	wp_enqueue_script('isotope', plugins_url('include/isotope.pkgd.min.js', __FILE__));
 	wp_enqueue_style('instalivit_style', plugins_url('instalivit.css', __FILE__));
 }
@@ -24,6 +27,20 @@ function im_instalivit_admin_page(){
 }
 
 function im_instalivit_view($atts = null){
+	$atts = shortcode_atts(
+		array(
+			'user'	=> '',
+			'tags'	=> ''
+		),
+		$atts,
+		'instalivit'
+	);
+	
+	$IM_INSTALIVIT_USERS = array();
+	if ($atts['user']){
+		$IM_INSTALIVIT_USERS = explode(",", $atts['user']);
+	}
+	
 	include('instalivit-view.php');
 }
 

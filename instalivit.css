@@ -3,4 +3,25 @@
 	height			: 300px;
 	background		: cyan;
 	margin-bottom	: 10px;
+	overflow		: hidden;	
+	background:rgba(245,245,245,0.7);
+	box-shadow:0px 0px 10px;
+}
+
+.instalivit-image{
+	cursor			: pointer;
+}
+
+.instalivit-comments-item{
+	margin			: 2%;
+	width			: 96%;
+	height			: 50px;
+	background		: cyan;
+}
+
+.instalivit-comments-more{
+	text-align		: right;
+	margin-right	: 2%;
+	font-size		: 12px;
+	cursor			: pointer;
 }
