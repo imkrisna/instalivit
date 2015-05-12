@@ -41,6 +41,11 @@ function im_instalivit_view($atts = null){
 		$IM_INSTALIVIT_USERS = explode(",", $atts['user']);
 	}
 	
+	$IM_INSTALIVIT_TAGS = array();
+	if ($atts['tags']){
+		$IM_INSTALIVIT_TAGS = explode(",", $atts['tags']);
+	}
+	
 	include('instalivit-view.php');
 }
 

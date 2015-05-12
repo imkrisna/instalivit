@@ -31,6 +31,10 @@
 		
 		if (is_array($r_get)) {
 			$r_object = json_decode($r_get["body"]);
+			if (isset($r_object->meta) && isset($r_object->meta->error_message)){
+				echo $r_object->meta->error_message . '<br />';
+				continue;
+			}
 			foreach ($r_object->data as $data){
 				if ($data->username == $user){
 					array_push($im_instalivit_userIds, $data->id);
@@ -42,14 +46,35 @@
 	}
 	
 	foreach ($im_instalivit_userIds as $uid){
-		$r_get = wp_remote_get("https://api.instagram.com/v1/users/" . $uid . "/media/recent?count=10&" . $im_instalivit_AuthData, array(
+		$r_get = wp_remote_get("https://api.instagram.com/v1/users/" . $uid . "/media/recent?count=60&" . $im_instalivit_AuthData, array(
 			'sslverify'	=> false,
 			'timeout' => 30
 		));
 		
 		if (is_array($r_get)){
 			$r_object = json_decode($r_get["body"]);
+			if (isset($r_object->meta) && isset($r_object->meta->error_message)){
+				echo $r_object->meta->error_message . '<br />';
+				continue;
+			}
 			foreach ($r_object->data as $data){			
+			
+				if (count($IM_INSTALIVIT_TAGS) > 0){
+					$hasTag = false;
+					foreach ($IM_INSTALIVIT_TAGS as $tag){
+						foreach ($data->tags as $dtag){
+							if (mb_convert_case($dtag, MB_CASE_LOWER, "UTF-8") == mb_convert_case($tag, MB_CASE_LOWER, "UTF-8")){
+								$hasTag = true;
+								break;
+							}
+						}
+						if ($hasTag == true) break;
+					}
+					
+					if ($hasTag == false) continue;
+				}
+				
+				if ($data->type != "image") continue;
 				array_push($im_instalivit_images, array(
 					'id'	=> $data->id,
 					'src'	=> $data->images->standard_resolution->url,
@@ -59,7 +84,60 @@
 			}	
 		}
 		else echo "[Network Error] Cannot Load Instagram Content (".$uid.")<br />";
-	}	
+	}
+
+	if (count($IM_INSTALIVIT_USERS) == 0 && count($IM_INSTALIVIT_TAGS) > 0){
+		foreach ($IM_INSTALIVIT_TAGS as $tag){
+			$r_get = wp_remote_get("https://api.instagram.com/v1/tags/" . mb_convert_case($tag, MB_CASE_LOWER, "UTF-8") . "/media/recent?count=60&" . $im_instalivit_AuthData, array(
+				'sslverify'	=> false,
+				'timeout' => 30
+			));
+			
+			if (is_array($r_get)){
+				$r_object = json_decode($r_get["body"]);
+				if (isset($r_object->meta) && isset($r_object->meta->error_message)){
+					echo $r_object->meta->error_message . '<br />';
+					continue;
+				}
+				
+				foreach ($r_object->data as $data){		
+					if ($data->type != "image") continue;
+					array_push($im_instalivit_images, array(
+						'id'	=> $data->id,
+						'src'	=> $data->images->standard_resolution->url,
+						'src_l'	=> $data->images->low_resolution->url,
+						'text'	=> $data->caption->text
+					));
+				}	
+			}
+			else echo "[Network Error] Cannot Load Instagram Content (".$tag.")<br />";
+		}
+	}
+	
+	if (count($IM_INSTALIVIT_USERS) == 0 && count($IM_INSTALIVIT_TAGS) == 0){
+		$r_get = wp_remote_get("https://api.instagram.com/v1/media/popular?count=60&" . $im_instalivit_AuthData, array(
+			'sslverify'	=> false,
+			'timeout' => 30
+		));
+		
+		if (is_array($r_get)){
+			$r_object = json_decode($r_get["body"]);
+			if (isset($r_object->meta) && isset($r_object->meta->error_message)){
+				echo $r_object->meta->error_message . '<br />';
+				continue;
+			}
+			foreach ($r_object->data as $data){		
+				if ($data->type != "image") continue;
+				array_push($im_instalivit_images, array(
+					'id'	=> $data->id,
+					'src'	=> $data->images->standard_resolution->url,
+					'src_l'	=> $data->images->low_resolution->url,
+					'text'	=> $data->caption->text
+				));
+			}	
+		}
+		else echo "[Network Error] Cannot Load Instagram Content (".$tag.")<br />";
+	}
 
 	set_time_limit($im_instalivit_default);
 ?>
