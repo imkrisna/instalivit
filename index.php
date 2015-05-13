@@ -81,7 +81,6 @@ function im_instalivit_remove() {
 function im_instalivit_add_dependency(){
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('instalivit_js', plugins_url('instalivit.js', __FILE__));
-	wp_enqueue_script('jquery_dd', plugins_url('include/jquery.dd.js', __FILE__));
 	wp_enqueue_script('isotope', plugins_url('include/isotope.pkgd.min.js', __FILE__));
 	wp_enqueue_style('instalivit_style', plugins_url('instalivit.css', __FILE__));
 }
